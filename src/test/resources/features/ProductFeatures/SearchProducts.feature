@@ -1,3 +1,4 @@
+@product
 Feature: Searching Products
 
   Description: As a User, Guest or Admin - all these user types should be able to search the

@@ -121,7 +121,9 @@ public class EditProductsSteps {
         List<Map<String, String>> createNewProduct = dataTable.asMaps();
         String updateProductDescription  = createNewProduct.get(0).get("Description");
         String updateProductPrice  = createNewProduct.get(0).get("Price");
+        Hooks.EditProductPage.Product_Description_Input2.clear();
         Hooks.EditProductPage.Product_Description_Input2.sendKeys(updateProductDescription);
+        Hooks.EditProductPage.Product_Price_Input2.clear();
         Hooks.EditProductPage.Product_Price_Input2.sendKeys(updateProductPrice);
     }
 

@@ -5,6 +5,7 @@ import io.cucumber.java.After;
 import io.cucumber.java.Before;
 import io.cucumber.java.BeforeAll;
 import io.github.bonigarcia.wdm.WebDriverManager;
+import org.openqa.selenium.SessionNotCreatedException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.interactions.Actions;
@@ -44,8 +45,16 @@ public class Hooks {
     }
 
     @Before(order = 2)
-    public void setUp() {
-        driver = new ChromeDriver();
+    public void setUp() throws InterruptedException {
+        // The driver starts so soon after quitting that sometimes it will crash
+        // because the session address is already in use.
+        // Catching the exception and waiting for 3 seconds should be sufficient
+        try {
+            driver = new ChromeDriver();
+        } catch (SessionNotCreatedException e) {
+            Thread.sleep(3000);
+            driver = new ChromeDriver();
+        }
         actions = new Actions(driver);
         wait = new WebDriverWait(driver, Duration.ofSeconds(2));
 

@@ -1,3 +1,4 @@
+@product
 Feature: Display Products
 
   Description: A Logged in User, a Guest (not logged in) and Admin should be able to see a list of available

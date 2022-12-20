@@ -1,3 +1,4 @@
+@product
 Feature: Users and Guests can not create, update and delete products
 
   Scenario: Users can not create, update or delete products
