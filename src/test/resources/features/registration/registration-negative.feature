@@ -15,6 +15,7 @@ Feature: Registration Negative
       | lastname  | Friedrich  |           | gauss@gmail.com | Hypotenuse345! | Last Name is required |
       | email     | Friedrich  | Gauss     |                 | Hypotenuse345! | Email Address is required |
       | email     | Friedrich  | Gauss     | fakeemail       | Hypotenuse345! | Email Address must be valid |
+      | email     | Friedrich  | Gauss     | jane@gmail.com  | Hypotenuse345! | Email Address is already taken |
       | password  | Friedrich  | Gauss     | gauss@gmail.com | hypotenuse345! | Password must contain at least 1 upper case letter |
       | password  | Friedrich  | Gauss     | gauss@gmail.com | HYPOTENUSE345! | Password must contain at least 1 lower case letter |
       | password  | Friedrich  | Gauss     | gauss@gmail.com | Hypotenuse!    | Password must contain at least 1 number |
