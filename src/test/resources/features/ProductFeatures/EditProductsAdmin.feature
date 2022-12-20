@@ -1,3 +1,4 @@
+@product
 Feature: An Admin should be able to create, update and delete products
 
   Background: Admin log in and access to edit products
