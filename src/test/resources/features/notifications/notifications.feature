@@ -1,3 +1,4 @@
+@notifications
 Feature: Notifications
 
   Scenario Outline: Notifications when transactions occurred
