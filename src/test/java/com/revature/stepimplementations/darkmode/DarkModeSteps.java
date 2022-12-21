@@ -4,11 +4,15 @@ import com.revature.stepimplementations.hooks.Hooks;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
+import org.assertj.core.api.SoftAssertions;
 import org.junit.Assert;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import static com.revature.stepimplementations.hooks.Hooks.*;
 
 public class DarkModeSteps {
+
+    private static final SoftAssertions softAssertions = new SoftAssertions();
 
     @Given("User navigates to the {string} page")
     public void user_navigates_to_the_page(String type) {
@@ -81,7 +85,7 @@ public class DarkModeSteps {
                 Hooks.loginPage.passwordInput.sendKeys("password");
                 Hooks.loginPage.loginButton.click();
                 Hooks.wait.until(ExpectedConditions.urlToBe("http://localhost:3000/"));
-                actions.moveToElement(frontPage.coatAddButton).click().pause(1).click().build().perform();
+                actions.moveToElement(frontPage.coatAddButton).pause(1).click().build().perform();
                 Hooks.generalPage.cartButton.click();
                 Hooks.cartPage.checkoutButton.click();
                 Hooks.wait.until(ExpectedConditions.urlToBe("http://localhost:3000/checkout"));
@@ -101,8 +105,38 @@ public class DarkModeSteps {
 
     @When("The theme switch is set towards the sun")
     public void the_theme_switch_is_set_towards_the_sun() {
-        actions.moveToElement(generalPage.darkModeSwitch).click().build().perform();
-        Assert.assertTrue(generalPage.switchOnLightMode.isDisplayed());
+        boolean darkMode = true;
+        try {
+            wait.ignoring(NoSuchElementException.class).until(ExpectedConditions.visibilityOf(generalPage.switchOnDarkMode));
+        } catch (Exception e) {
+            darkMode = false;
+        }
+
+        if (darkMode) {
+            // Check background color
+            wait.until(ExpectedConditions.visibilityOf(generalPage.pageBody));
+            String bgColor = generalPage.pageBody.getCssValue("background-color");
+            softAssertions.assertThat(bgColor).isEqualTo("rgba(18, 18, 18, 1)");
+
+            // Check font color
+            wait.until(ExpectedConditions.visibilityOf(generalPage.pageText));
+            String fontColor = generalPage.pageText.getCssValue("color");
+            softAssertions.assertThat(fontColor).isEqualTo("rgba(255, 255, 255, 1)");
+
+            // Move the switch to lightmode as the starting condition
+            actions.moveToElement(generalPage.darkModeSwitch).click().build().perform();
+            Assert.assertTrue(generalPage.switchOnLightMode.isDisplayed());
+        } else {
+            // Check background color
+            wait.until(ExpectedConditions.visibilityOf(generalPage.pageBody));
+            String bgColor = generalPage.pageBody.getCssValue("background-color");
+            softAssertions.assertThat(bgColor).isEqualTo("rgba(255, 255, 255, 1)");
+
+            // Check font color
+            wait.until(ExpectedConditions.visibilityOf(generalPage.pageText));
+            String fontColor = generalPage.pageText.getCssValue("color");
+            softAssertions.assertThat(fontColor).isEqualTo("rgba(0, 0, 0, 0.87)");
+        }
     }
 
     @When("User clicks the theme switch {string}")
@@ -121,6 +155,7 @@ public class DarkModeSteps {
         } else {
             wait.until(ExpectedConditions.visibilityOf(generalPage.switchOnLightMode)).isDisplayed();
         }
+        softAssertions.assertAll();
     }
 
     @Then("The theme of the page changes to {string} mode")
