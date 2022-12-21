@@ -5,7 +5,10 @@ import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import org.junit.jupiter.api.Assertions;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.support.ui.ExpectedConditions;
+
+import java.time.Duration;
 
 public class NotificationsSteps {
     @Given("A user is logged in with {string} and {string}")
@@ -53,7 +56,8 @@ public class NotificationsSteps {
     }
     @When("User select a payment method")
     public void user_select_a_payment_method() {
-        Hooks.actions.moveToElement(Hooks.notificationsPage.checkoutPaymentOption).click().perform();
+        Hooks.wait.ignoring(NoSuchElementException.class).until(ExpectedConditions.elementToBeClickable(Hooks.notificationsPage.submitPaymentBtn));
+        Hooks.notificationsPage.checkoutPaymentOption.click();
     }
     @When("clicks on the Submit Payment button")
     public void clicks_on_the_submit_payment_button() {
